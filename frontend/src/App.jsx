@@ -3,15 +3,27 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import { useAuth } from './hooks/useAuth'; 
 
 function App() {
+  const { user, logout } = useAuth(); 
+
   return (
     <BrowserRouter>
       <header>
-        <nav style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem' }}>
           <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Signup</Link>
+          {user ? (
+            <>
+              <span>Welcome, {user.name}!</span>
+              <button onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/signup">Signup</Link>
+            </>
+          )}
         </nav>
       </header>
       <main>
