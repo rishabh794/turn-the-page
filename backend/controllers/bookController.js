@@ -22,8 +22,22 @@ const addBook = asyncHandler(async (req, res) => {
 });
 
 const getAllBooks = asyncHandler(async (req, res) => {
-  const books = await Book.find({});
-  res.status(200).json(books);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+
+  const skip = (page - 1) * limit;
+
+  const totalBooks = await Book.countDocuments();
+  const totalPages = Math.ceil(totalBooks / limit);
+
+  const books = await Book.find({}).skip(skip).limit(limit);
+
+  res.status(200).json({
+    totalBooks,
+    totalPages,
+    currentPage: page,
+    books,
+  });
 });
 
 const getBookById = asyncHandler(async (req, res) => {
