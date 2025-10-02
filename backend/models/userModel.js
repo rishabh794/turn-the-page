@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema(
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         "Please add a valid email!",
-      ], // Basic email format validation
+      ],
     },
     type: {
       type: String,
@@ -34,7 +34,7 @@ const userSchema = mongoose.Schema(
   }
 );
 
-// Encrypt Password before saving (This part is perfect, no changes needed)
+// Encrypt Password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();

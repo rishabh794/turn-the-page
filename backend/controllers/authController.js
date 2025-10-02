@@ -70,7 +70,7 @@ const login = asyncHandler(async (req, res) => {
   res.cookie("token", token, {
     path: "/",
     httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 86400 * 7), // 7 days
+    expires: new Date(Date.now() + 1000 * 86400 * 7),
     sameSite: "none",
     secure: true,
   });
@@ -87,7 +87,7 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
-// Get User Details Controller (Useful for frontend to know who is logged in)
+// Get User Details Controller
 const getUserDetails = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id).select("-password");
   if (!user) {

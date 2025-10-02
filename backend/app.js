@@ -6,7 +6,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 import errorHandler from "./middlewares/errorMiddleware.js";
-import seedRoles from "./utils/seedRoles.js";
 import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
@@ -16,7 +15,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(async () => {
     console.log("DB CONNECTED");
-    await seedRoles();
   })
   .catch((err) => console.log("DB CONNECTION ERROR", err));
 
