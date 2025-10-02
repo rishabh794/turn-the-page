@@ -1,10 +1,20 @@
 import express from "express";
 import authenticationMiddleware from "../middlewares/authenticationMiddleware.js";
-import { addBook, getAllBooks } from "../controllers/bookController.js";
+import {
+  addBook,
+  getAllBooks,
+  getBookById,
+  updateBook,
+  deleteBook,
+} from "../controllers/bookController.js";
 
 const router = express.Router();
 
-router.post("/", authenticationMiddleware, addBook);
 router.get("/", getAllBooks);
+router.get("/:id", getBookById);
+
+router.post("/", authenticationMiddleware, addBook);
+router.put("/:id", authenticationMiddleware, updateBook);
+router.delete("/:id", authenticationMiddleware, deleteBook);
 
 export default router;
