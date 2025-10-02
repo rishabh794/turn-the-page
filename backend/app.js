@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import "dotenv/config";
 import errorHandler from "./middlewares/errorMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
+import bookRoutes from "./routes/bookRoutes.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes);
 
 app.use(errorHandler);
 
