@@ -7,6 +7,7 @@ import {
   updateBook,
   deleteBook,
 } from "../controllers/bookController.js";
+import { addReview } from "../controllers/reviewController.js";
 
 const router = express.Router();
 
@@ -16,5 +17,7 @@ router.get("/:id", getBookById);
 router.post("/", authenticationMiddleware, addBook);
 router.put("/:id", authenticationMiddleware, updateBook);
 router.delete("/:id", authenticationMiddleware, deleteBook);
+
+router.post("/:bookId/reviews", authenticationMiddleware, addReview);
 
 export default router;

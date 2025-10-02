@@ -59,7 +59,7 @@ const updateBook = asyncHandler(async (req, res) => {
     throw new Error("Book not found");
   }
 
-  if (book.addedBy.toString() !== req.user.id) {
+  if (book.addedBy.toString() !== req.user.id && req.user.type !== "admin") {
     res.status(403);
     throw new Error("Forbidden: You are not authorized to update this book.");
   }
@@ -79,7 +79,7 @@ const deleteBook = asyncHandler(async (req, res) => {
     throw new Error("Book not found");
   }
 
-  if (book.addedBy.toString() !== req.user.id) {
+  if (book.addedBy.toString() !== req.user.id && req.user.type !== "admin") {
     res.status(403);
     throw new Error("Forbidden: You are not authorized to delete this book.");
   }
