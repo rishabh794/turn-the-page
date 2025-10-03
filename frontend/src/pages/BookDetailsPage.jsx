@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import AddReviewForm from '../components/AddReviewForm';
+import { useAuth } from '../hooks/useAuth';
 
 const BookDetailsPage = () => {
   const [book, setBook] = useState(null);
@@ -8,6 +10,7 @@ const BookDetailsPage = () => {
   const [error, setError] = useState('');
    const [reviews, setReviews] = useState([]);
   const { bookId } = useParams(); 
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -29,6 +32,11 @@ const BookDetailsPage = () => {
     fetchBook();
   }, [bookId]); 
 
+    const handleReviewAdded = (newReview) => {
+    const reviewWithUser = { ...newReview, userId: { name: user.name } };
+    setReviews([reviewWithUser, ...reviews]);
+  };
+  
   if (loading) return <p>Loading book details...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
   if (!book) return <p>Book not found.</p>;
@@ -42,6 +50,8 @@ const BookDetailsPage = () => {
       <hr />
       <p>{book.description}</p>
       <hr style={{ margin: '2rem 0' }} />
+
+      {user && <AddReviewForm bookId={bookId} onReviewAdded={handleReviewAdded} />}
 
       <h3>Reviews</h3>
       {reviews.length > 0 ? (
