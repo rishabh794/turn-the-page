@@ -8,6 +8,7 @@ import BookDetailsPage from './pages/BookDetailsPage';
 import AddBookPage from './pages/AddBookPage';
 import EditBookPage from './pages/EditBookPage';
 import ProfilePage from './pages/ProfilePage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const { user, logout } = useAuth(); 
@@ -38,9 +39,21 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/books/:bookId" element={<BookDetailsPage />} />
-           <Route path="/add-book" element={<AddBookPage />} />
-          <Route path="/books/:bookId/edit" element={<EditBookPage />} />
-           <Route path="/profile" element={<ProfilePage />} />
+           <Route path="/add-book" element={
+            <ProtectedRoute>
+              <AddBookPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/books/:bookId/edit" element={
+            <ProtectedRoute>
+              <EditBookPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
     </>
