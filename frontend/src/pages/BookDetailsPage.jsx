@@ -111,6 +111,11 @@ const BookDetailsPage = () => {
         </div>
       )}
       <h2>by {book.author}</h2>
+      {book.reviewCount > 0 ? (
+        <p><strong>Average Rating:</strong> {book.averageRating} / 5 (based on {book.reviewCount} reviews)</p>
+      ) : (
+        <p>No ratings yet.</p>
+      )}
       <p><strong>Genre:</strong> {book.genre}</p>
       <p><strong>Published:</strong> {book.year}</p>
       <hr />

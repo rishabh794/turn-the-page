@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Book from "../models/bookModel.js";
+import Review from "../models/reviewModel.js";
 
 const addBook = asyncHandler(async (req, res) => {
   const { title, author, description, genre, year } = req.body;
@@ -48,7 +49,19 @@ const getBookById = asyncHandler(async (req, res) => {
     throw new Error("Book not found");
   }
 
-  res.status(200).json(book);
+  const reviews = await Review.find({ bookId: req.params.id });
+
+  let averageRating = 0;
+  if (reviews.length > 0) {
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    averageRating = (sum / reviews.length).toFixed(1);
+  }
+
+  const bookObject = book.toObject();
+  bookObject.averageRating = Number(averageRating);
+  bookObject.reviewCount = reviews.length;
+
+  res.status(200).json(bookObject);
 });
 
 const updateBook = asyncHandler(async (req, res) => {
