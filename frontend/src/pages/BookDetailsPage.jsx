@@ -3,6 +3,9 @@ import { useParams , useNavigate , Link} from 'react-router-dom';
 import axios from 'axios';
 import AddReviewForm from '../components/AddReviewForm';
 import { useAuth } from '../hooks/useAuth';
+import BookInfo from '../components/BookInfo';
+import RatingChart from '../components/RatingChart';
+import ReviewsList from '../components/ReviewsList';
 
 const BookDetailsPage = () => {
   const [book, setBook] = useState(null);
@@ -13,10 +16,7 @@ const BookDetailsPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [editingReviewId, setEditingReviewId] = useState(null);
-  const [editRating, setEditRating] = useState(5);
-  const [editText, setEditText] = useState('');
-
+  
   useEffect(() => {
     const fetchBook = async () => {
       try {
@@ -37,11 +37,11 @@ const BookDetailsPage = () => {
     fetchBook();
   }, [bookId]); 
 
-    const handleReviewAdded = (newReview) => {
+  const handleReviewAdded = (newReview) => {
     setReviews([newReview, ...reviews]);
   };
 
-    const handleDelete = async () => {
+  const handleBookDelete = async () => {
     if (window.confirm('Are you sure you want to delete this book?')) {
       try {
         await axios.delete(`http://localhost:8008/api/books/${bookId}`, {
@@ -66,29 +66,8 @@ const BookDetailsPage = () => {
     }
   };
   
-  const handleEditClick = (review) => {
-    setEditingReviewId(review._id);
-    setEditRating(review.rating);
-    setEditText(review.reviewText);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingReviewId(null);
-  };
-
-  const handleUpdateReview = async (reviewId) => {
-    try {
-      const res = await axios.put(
-        `http://localhost:8008/api/reviews/${reviewId}`,
-        { rating: editRating, reviewText: editText },
-        { withCredentials: true }
-      );
-      setReviews(reviews.map((r) => (r._id === reviewId ? res.data : r)));
-      setEditingReviewId(null); 
-    } catch (err) {
-      console.error("Failed to update review", err);
-      alert("Failed to update review.");
-    }
+  const handleReviewUpdated = (updatedReview) => {
+    setReviews(reviews.map((r) => (r._id === updatedReview._id ? updatedReview : r)));
   };
 
   if (loading) return <p>Loading book details...</p>;
@@ -97,71 +76,17 @@ const BookDetailsPage = () => {
 
   const isBookOwner = user && user._id === book.addedBy;
 
-  return (
+ return (
     <div>
-      <h1>{book.title}</h1>
-      {isBookOwner && (
-        <div style={{ margin: '1rem 0', display: 'flex', gap: '1rem' }}>
-          <Link to={`/books/${bookId}/edit`}>
-            <button>Edit Book</button>
-          </Link>
-          <button onClick={handleDelete} style={{ background: 'red', color: 'white' }}>
-            Delete Book
-          </button>
-        </div>
-      )}
-      <h2>by {book.author}</h2>
-      {book.reviewCount > 0 ? (
-        <p><strong>Average Rating:</strong> {book.averageRating} / 5 (based on {book.reviewCount} reviews)</p>
-      ) : (
-        <p>No ratings yet.</p>
-      )}
-      <p><strong>Genre:</strong> {book.genre}</p>
-      <p><strong>Published:</strong> {book.year}</p>
-      <hr />
-      <p>{book.description}</p>
+      <BookInfo book={book} isOwner={isBookOwner} onDelete={handleBookDelete} />
       <hr style={{ margin: '2rem 0' }} />
-
+      <RatingChart reviews={reviews} />
       {user && <AddReviewForm bookId={bookId} onReviewAdded={handleReviewAdded} />}
-
-     <h3>Reviews</h3>
-      {reviews.length > 0 ? (
-        <div>
-          {reviews.map((review) => {
-            const isReviewOwner = user && user._id === review.userId?._id;
-            const isEditing = editingReviewId === review._id;
-
-            return (
-              <div key={review._id} style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem' }}>
-                {isEditing ? (
-                  <div>
-                    <select value={editRating} onChange={(e) => setEditRating(Number(e.target.value))}>
-                      <option value={5}>5</option><option value={4}>4</option><option value={3}>3</option><option value={2}>2</option><option value={1}>1</option>
-                    </select>
-                    <textarea value={editText} onChange={(e) => setEditText(e.target.value)} style={{ width: '100%', minHeight: '80px' }}/>
-                    <button onClick={() => handleUpdateReview(review._id)}>Save</button>
-                    <button onClick={handleCancelEdit}>Cancel</button>
-                  </div>
-                ) : (
-                  <div>
-                    <p><strong>Rating: {review.rating} / 5</strong></p>
-                    <p>{review.reviewText}</p>
-                    <p><small>by: {review.userId?.name || 'Anonymous'}</small></p>
-                    {isReviewOwner && (
-                      <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem' }}>
-                        <button onClick={() => handleEditClick(review)}>Edit</button>
-                        <button onClick={() => handleReviewDelete(review._id)} style={{ background: 'darkred', color: 'white' }}>Delete</button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <p>No reviews yet. Be the first to add one!</p>
-      )}
+      <ReviewsList
+        reviews={reviews}
+        onReviewDeleted={handleReviewDelete}
+        onReviewUpdated={handleReviewUpdated}
+      />
     </div>
   );
 };
