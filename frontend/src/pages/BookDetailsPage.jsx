@@ -38,8 +38,7 @@ const BookDetailsPage = () => {
   }, [bookId]); 
 
     const handleReviewAdded = (newReview) => {
-    const reviewWithUser = { ...newReview, userId: { name: user.name } };
-    setReviews([reviewWithUser, ...reviews]);
+    setReviews([newReview, ...reviews]);
   };
 
     const handleDelete = async () => {

@@ -24,7 +24,11 @@ const addReview = asyncHandler(async (req, res) => {
     userId: req.user.id,
   });
 
-  res.status(201).json(review);
+  const populatedReview = await Review.findById(review._id).populate(
+    "userId",
+    "name"
+  );
+  res.status(201).json(populatedReview);
 });
 
 const deleteReview = asyncHandler(async (req, res) => {
@@ -72,7 +76,11 @@ const updateReview = asyncHandler(async (req, res) => {
   review.rating = rating || review.rating;
   review.reviewText = reviewText || review.reviewText;
 
-  const updatedReview = await review.save();
+  await review.save();
+  const updatedReview = await Review.findById(review._id).populate(
+    "userId",
+    "name"
+  );
   res.status(200).json(updatedReview);
 });
 
