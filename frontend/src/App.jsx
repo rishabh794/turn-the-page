@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import { useAuth } from './hooks/useAuth'; 
 import BookDetailsPage from './pages/BookDetailsPage';
+import AddBookPage from './pages/AddBookPage';
 
 function App() {
   const { user, logout } = useAuth(); 
@@ -16,6 +17,7 @@ function App() {
           <Link to="/">Home</Link>
           {user ? (
             <>
+               <Link to="/add-book">Add New Book</Link>
               <span>Welcome, {user.name}!</span>
               <button onClick={logout}>Logout</button>
             </>
@@ -33,6 +35,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/books/:bookId" element={<BookDetailsPage />} />
+           <Route path="/add-book" element={<AddBookPage />} />
         </Routes>
       </main>
     </BrowserRouter>
