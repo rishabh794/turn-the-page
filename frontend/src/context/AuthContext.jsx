@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from './auth-context';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkLoggedIn = async () => {
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }) => {
       withCredentials: true,
     });
     setUser(null);
+    navigate('/login');
   };
 
   const value = {
