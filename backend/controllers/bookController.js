@@ -23,15 +23,60 @@ const addBook = asyncHandler(async (req, res) => {
 });
 
 const getAllBooks = asyncHandler(async (req, res) => {
+  const { search, genre, sort } = req.query;
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
-
   const skip = (page - 1) * limit;
 
-  const totalBooks = await Book.countDocuments();
-  const totalPages = Math.ceil(totalBooks / limit);
+  const matchStage = {};
+  if (search) {
+    matchStage.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { author: { $regex: search, $options: "i" } },
+    ];
+  }
+  if (genre) {
+    matchStage.genre = genre;
+  }
 
-  const books = await Book.find({}).skip(skip).limit(limit);
+  let pipeline = [
+    { $match: matchStage },
+
+    {
+      $lookup: {
+        from: "reviews",
+        localField: "_id",
+        foreignField: "bookId",
+        as: "reviews",
+      },
+    },
+    {
+      $addFields: {
+        reviewCount: { $size: "$reviews" },
+        averageRating: { $avg: "$reviews.rating" },
+      },
+    },
+  ];
+
+  const sortStage = {};
+  if (sort) {
+    const sortField = sort.startsWith("-") ? sort.substring(1) : sort;
+    const sortOrder = sort.startsWith("-") ? -1 : 1;
+    sortStage[sortField] = sortOrder;
+  } else {
+    sortStage.createdAt = -1;
+  }
+  pipeline.push({ $sort: sortStage });
+
+  const paginatedPipeline = [...pipeline, { $skip: skip }, { $limit: limit }];
+
+  const books = await Book.aggregate(paginatedPipeline);
+
+  const totalBooksPipeline = [...pipeline, { $count: "total" }];
+  const totalBooksResult = await Book.aggregate(totalBooksPipeline);
+  const totalBooks =
+    totalBooksResult.length > 0 ? totalBooksResult[0].total : 0;
+  const totalPages = Math.ceil(totalBooks / limit);
 
   res.status(200).json({
     totalBooks,
