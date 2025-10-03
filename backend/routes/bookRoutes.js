@@ -7,7 +7,10 @@ import {
   updateBook,
   deleteBook,
 } from "../controllers/bookController.js";
-import { addReview } from "../controllers/reviewController.js";
+import {
+  addReview,
+  getReviewsForBook,
+} from "../controllers/reviewController.js";
 
 const router = express.Router();
 
@@ -19,5 +22,6 @@ router.put("/:id", authenticationMiddleware, updateBook);
 router.delete("/:id", authenticationMiddleware, deleteBook);
 
 router.post("/:bookId/reviews", authenticationMiddleware, addReview);
+router.get("/:bookId/reviews", getReviewsForBook);
 
 export default router;

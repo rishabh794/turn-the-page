@@ -45,4 +45,35 @@ const deleteReview = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Review deleted successfully." });
 });
 
-export { addReview, deleteReview };
+const getReviewsForBook = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+  const reviews = await Review.find({ bookId: bookId }).populate(
+    "userId",
+    "name"
+  );
+
+  res.status(200).json(reviews);
+});
+
+const updateReview = asyncHandler(async (req, res) => {
+  const { rating, reviewText } = req.body;
+  const review = await Review.findById(req.params.id);
+
+  if (!review) {
+    res.status(404);
+    throw new Error("Review not found.");
+  }
+
+  if (review.userId.toString() !== req.user.id) {
+    res.status(403);
+    throw new Error("Forbidden: You can only edit your own reviews.");
+  }
+
+  review.rating = rating || review.rating;
+  review.reviewText = reviewText || review.reviewText;
+
+  const updatedReview = await review.save();
+  res.status(200).json(updatedReview);
+});
+
+export { addReview, deleteReview, updateReview, getReviewsForBook };
