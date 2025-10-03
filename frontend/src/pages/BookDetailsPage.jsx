@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useNavigate , Link} from 'react-router-dom';
 import axios from 'axios';
 import AddReviewForm from '../components/AddReviewForm';
 import { useAuth } from '../hooks/useAuth';
@@ -11,6 +11,7 @@ const BookDetailsPage = () => {
    const [reviews, setReviews] = useState([]);
   const { bookId } = useParams(); 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -36,14 +37,40 @@ const BookDetailsPage = () => {
     const reviewWithUser = { ...newReview, userId: { name: user.name } };
     setReviews([reviewWithUser, ...reviews]);
   };
+
+    const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this book?')) {
+      try {
+        await axios.delete(`http://localhost:8008/api/books/${bookId}`, {
+          withCredentials: true,
+        });
+        navigate('/'); 
+      } catch (err) {
+        setError('Failed to delete the book.');
+        console.error(err);
+      }
+    }
+  };
   
   if (loading) return <p>Loading book details...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
   if (!book) return <p>Book not found.</p>;
 
+  const isOwner = user && user._id === book.addedBy;
+
   return (
     <div>
       <h1>{book.title}</h1>
+      {isOwner && (
+        <div style={{ margin: '1rem 0', display: 'flex', gap: '1rem' }}>
+          <Link to={`/books/${bookId}/edit`}>
+            <button>Edit Book</button>
+          </Link>
+          <button onClick={handleDelete} style={{ background: 'red', color: 'white' }}>
+            Delete Book
+          </button>
+        </div>
+      )}
       <h2>by {book.author}</h2>
       <p><strong>Genre:</strong> {book.genre}</p>
       <p><strong>Published:</strong> {book.year}</p>
