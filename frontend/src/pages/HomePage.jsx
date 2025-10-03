@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -15,7 +16,6 @@ const HomePage = () => {
       setLoading(true);
       setError('');
       try {
-        // Fetch books for the current page
         const res = await axios.get(`http://localhost:8008/api/books?page=${page}&limit=5`);
         setBooks(res.data.books);
         setTotalPages(res.data.totalPages);
@@ -28,8 +28,7 @@ const HomePage = () => {
     };
 
     fetchBooks();
-  }, [page]); // This effect runs whenever the 'page' state changes
-
+  }, [page]); 
   const handleNextPage = () => {
     setPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
@@ -57,7 +56,9 @@ const HomePage = () => {
           <div style={{ marginTop: '1rem' }}>
             {books.map((book) => (
               <div key={book._id} style={{ border: '1px solid black', padding: '1rem', marginBottom: '1rem' }}>
-                <h2>{book.title}</h2>
+                 <h2>
+      <Link to={`/books/${book._id}`}>{book.title}</Link>
+    </h2>
                 <p>by {book.author}</p>
                 <p>{book.description}</p>
               </div>
