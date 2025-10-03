@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +9,8 @@ const LoginPage = () => {
     password: '',
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,14 +21,13 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:8008/api/auth/login', formData, {
+      await axios.post('http://localhost:8008/api/auth/login', formData, {
         withCredentials: true,
       });
-
-      if (res.data) {
-        login(res.data.user); 
-        navigate('/');
-      }
+      
+      await login(); 
+      
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred during login.');
     }

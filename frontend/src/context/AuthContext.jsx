@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useCallback } from 'react';
 import axios from 'axios';
 import { AuthContext } from './auth-context';
 import { useNavigate } from 'react-router-dom';
@@ -8,26 +8,26 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true); 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      try {
-        const res = await axios.get('http://localhost:8008/api/auth/user-details', {
-          withCredentials: true,
-        });
-        setUser(res.data);
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkLoggedIn();
+   const refetchUser = useCallback(async () => {
+    try {
+      const res = await axios.get('http://localhost:8008/api/auth/user-details', {
+        withCredentials: true,
+      });
+      setUser(res.data);
+    } catch  {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    refetchUser();
+  }, [refetchUser]);
 
-  const login = (userData) => {
-    setUser(userData);
+
+   const login = async () => {
+    await refetchUser();
   };
 
   const logout = async () => {

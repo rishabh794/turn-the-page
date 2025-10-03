@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -10,8 +10,9 @@ const SignupPage = () => {
     password: '',
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const navigate = useNavigate();
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,13 +23,12 @@ const SignupPage = () => {
     setError(''); 
 
     try {
-      const res = await axios.post('http://localhost:8008/api/auth/register', formData, {
+      await axios.post('http://localhost:8008/api/auth/register', formData, {
         withCredentials: true, 
       });
-      if (res.data) {
-        login(res.data.user);
-        navigate('/');
-      }
+      await login(); 
+      
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred during signup.');
     }
