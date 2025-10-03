@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { genreOptions } from '../constants/genres';
 
 const EditBookPage = () => {
   const [formData, setFormData]  = useState({
@@ -74,7 +75,12 @@ const EditBookPage = () => {
         </div>
         <div>
           <label htmlFor="genre">Genre</label>
-          <input type="text" id="genre" name="genre" value={formData.genre} onChange={handleChange} required />
+          <select id="genre" name="genre" value={formData.genre} onChange={handleChange} required>
+            <option value="" disabled>Select a Genre</option>
+            {genreOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label htmlFor="year">Published Year</label>
