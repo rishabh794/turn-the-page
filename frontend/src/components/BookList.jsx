@@ -28,8 +28,9 @@ const BookList = ({ books, loading, error }) => {
         }
       }
       
+      const apiKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
       const googleResponse = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=1`
+        `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=1&key=${apiKey}` 
       );
       const googleData = await googleResponse.json();
       
