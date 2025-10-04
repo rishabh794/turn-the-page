@@ -78,7 +78,7 @@ Example environment files (`.env.example`) are provided in both the `/backend` a
 
 ### 1. Clone the Repository
 
-git clone [https://github.com/YourUsername/turn-the-page.git](https://github.com/YourUsername/turn-the-page.git)
+git clone [https://github.com/rishabh794/turn-the-page.git](https://github.com/rishabh794/turn-the-page.git)
 
 cd turn-the-page
 
