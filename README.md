@@ -70,7 +70,7 @@ To run this project on your local machine, follow these steps.
 - pnpm (or npm/yarn)
 - A MongoDB Atlas account & a Google Cloud account (for the Books API Key)
 
-## Environment Variables
+### Environment Variables
 
 Example environment files (`.env.example`) are provided in both the `/backend` and `/frontend` directories. Please copy these to a new `.env` file in their respective folders and fill in the required secret values before running the application.
 
