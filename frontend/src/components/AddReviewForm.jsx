@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTheme } from '../hooks/useTheme';
 
 const AddReviewForm = ({ bookId, onReviewAdded }) => {
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState('');
   const [error, setError] = useState('');
   const [hoveredStar, setHoveredStar] = useState(0);
+  const { isDark } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,22 +27,38 @@ const AddReviewForm = ({ bookId, onReviewAdded }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 border-2 border-orange-200 rounded-2xl p-6 md:p-8 bg-gradient-to-br from-orange-50 to-red-50 shadow-md hover:shadow-lg transition-shadow duration-300">
+    <form onSubmit={handleSubmit} className={`mt-8 border-2 rounded-2xl p-6 md:p-8 shadow-md hover:shadow-lg transition-shadow duration-300 ${
+      isDark
+        ? 'bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600'
+        : 'bg-gradient-to-br from-orange-50 to-red-50 border-orange-200'
+    }`}>
       <div className="flex items-center gap-3 mb-6">
-        <h4 className="text-2xl md:text-3xl font-bold text-gray-900">Add Your Review</h4>
+        <h4 className={`text-2xl md:text-3xl font-bold ${
+          isDark ? 'text-gray-100' : 'text-gray-900'
+        }`}>Add Your Review</h4>
       </div>
       
       {error && (
-        <div className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-2xl mb-6 font-semibold shadow-sm">
+        <div className={`border-2 px-4 py-3 rounded-2xl mb-6 font-semibold shadow-sm ${
+          isDark
+            ? 'bg-gradient-to-r from-red-900/50 to-pink-900/50 border-red-700 text-red-400'
+            : 'bg-gradient-to-r from-red-50 to-pink-50 border-red-300 text-red-700'
+        }`}>
           {error}
         </div>
       )}
       
       <div className="mb-6">
-        <label htmlFor="rating" className="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+        <label htmlFor="rating" className={`block text-sm font-semibold mb-3 uppercase tracking-wide ${
+          isDark ? 'text-gray-300' : 'text-gray-700'
+        }`}>
           Your Rating
         </label>
-        <div className="bg-white rounded-2xl p-4 border-2 border-orange-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className={`rounded-2xl p-4 border-2 shadow-sm hover:shadow-md transition-shadow duration-300 ${
+          isDark
+            ? 'bg-gray-700 border-gray-600'
+            : 'bg-white border-orange-200'
+        }`}>
           <div className="flex items-center gap-2 mb-3">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -55,7 +73,7 @@ const AddReviewForm = ({ bookId, onReviewAdded }) => {
                   className={`w-10 h-10 ${
                     star <= (hoveredStar || rating)
                       ? 'text-orange-500'
-                      : 'text-gray-300'
+                      : (isDark ? 'text-gray-600' : 'text-gray-300')
                   }`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -72,7 +90,11 @@ const AddReviewForm = ({ bookId, onReviewAdded }) => {
             id="rating" 
             value={rating} 
             onChange={(e) => setRating(Number(e.target.value))}
-            className="w-full px-4 py-3 border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-gradient-to-r from-amber-50 to-orange-50 text-gray-900 font-semibold transition duration-200"
+            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-semibold transition duration-200 ${
+              isDark
+                ? 'bg-gray-600 border-gray-500 text-gray-100'
+                : 'bg-gradient-to-r from-amber-50 to-orange-50 border-orange-200 text-gray-900'
+            }`}
           >
             <option value={5}>⭐⭐⭐⭐⭐ 5 - Excellent</option>
             <option value={4}>⭐⭐⭐⭐ 4 - Good</option>
@@ -84,7 +106,9 @@ const AddReviewForm = ({ bookId, onReviewAdded }) => {
       </div>
       
       <div className="mb-6">
-        <label htmlFor="reviewText" className="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+        <label htmlFor="reviewText" className={`block text-sm font-semibold mb-3 uppercase tracking-wide ${
+          isDark ? 'text-gray-300' : 'text-gray-700'
+        }`}>
           Your Review
         </label>
         <textarea
@@ -93,7 +117,11 @@ const AddReviewForm = ({ bookId, onReviewAdded }) => {
           onChange={(e) => setReviewText(e.target.value)}
           required
           placeholder="Share your thoughts about this book..."
-          className="w-full px-4 py-3 border-2 border-orange-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 resize-none transition duration-200 shadow-sm hover:shadow-md"
+          className={`w-full px-4 py-3 border-2 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none transition duration-200 shadow-sm hover:shadow-md ${
+            isDark
+              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500'
+              : 'bg-white border-orange-200 text-gray-900 placeholder-gray-500'
+          }`}
           rows="6"
         />
       </div>

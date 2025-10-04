@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useTheme } from '../hooks/useTheme';
 import AddReviewForm from '../components/AddReviewForm';
 import { useAuth } from '../hooks/useAuth';
 import BookInfo from '../components/BookInfo';
@@ -14,6 +15,7 @@ const BookDetailsPage = () => {
   const [reviews, setReviews] = useState([]);
   const { bookId } = useParams(); 
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,14 +73,24 @@ const BookDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${
+        isDark 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+          : 'bg-gradient-to-br from-amber-50 via-orange-50 to-red-50'
+      }`}>
         <div className="text-center">
           <div className="relative w-20 h-20 mb-6 mx-auto">
-            <div className="absolute top-0 left-0 w-full h-full border-4 border-orange-200 rounded-full"></div>
+            <div className={`absolute top-0 left-0 w-full h-full border-4 rounded-full ${
+              isDark ? 'border-orange-900' : 'border-orange-200'
+            }`}></div>
             <div className="absolute top-0 left-0 w-full h-full border-4 border-orange-500 rounded-full animate-spin border-t-transparent"></div>
           </div>
-          <p className="text-gray-800 text-xl font-semibold">Loading book details...</p>
-          <p className="text-gray-600 mt-2">Preparing your reading experience</p>
+          <p className={`text-xl font-semibold ${
+            isDark ? 'text-gray-200' : 'text-gray-800'
+          }`}>Loading book details...</p>
+          <p className={`mt-2 ${
+            isDark ? 'text-gray-400' : 'text-gray-600'
+          }`}>Preparing your reading experience</p>
         </div>
       </div>
     );
@@ -86,16 +98,28 @@ const BookDetailsPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border-l-4 border-red-500">
+      <div className={`min-h-screen flex items-center justify-center p-6 ${
+        isDark 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+          : 'bg-gradient-to-br from-amber-50 via-orange-50 to-red-50'
+      }`}>
+        <div className={`max-w-md w-full rounded-3xl shadow-2xl p-8 border-l-4 border-red-500 ${
+          isDark ? 'bg-gray-800' : 'bg-white'
+        }`}>
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+            <div className={`w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center ${
+              isDark ? 'bg-red-900/50' : 'bg-red-100'
+            }`}>
               <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">Oops! Something went wrong</h2>
-            <p className="text-red-600 mb-6">{error}</p>
+            <h2 className={`text-2xl font-bold mb-3 ${
+              isDark ? 'text-gray-100' : 'text-gray-900'
+            }`}>Oops! Something went wrong</h2>
+            <p className={`mb-6 ${
+              isDark ? 'text-red-400' : 'text-red-600'
+            }`}>{error}</p>
             <Link 
               to="/" 
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-full transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -113,15 +137,27 @@ const BookDetailsPage = () => {
 
   if (!book) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 text-center">
-          <div className="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center p-6 ${
+        isDark 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+          : 'bg-gradient-to-br from-amber-50 via-orange-50 to-red-50'
+      }`}>
+        <div className={`max-w-md w-full rounded-3xl shadow-2xl p-8 text-center ${
+          isDark ? 'bg-gray-800' : 'bg-white'
+        }`}>
+          <div className={`w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center ${
+            isDark ? 'bg-orange-900/50' : 'bg-orange-100'
+          }`}>
             <svg className="w-10 h-10 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Book not found</h2>
-          <p className="text-gray-600 mb-6">The book you're looking for doesn't exist or has been removed.</p>
+          <h2 className={`text-2xl font-bold mb-3 ${
+            isDark ? 'text-gray-100' : 'text-gray-900'
+          }`}>Book not found</h2>
+          <p className={`mb-6 ${
+            isDark ? 'text-gray-400' : 'text-gray-600'
+          }`}>The book you're looking for doesn't exist or has been removed.</p>
           <Link 
             to="/" 
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-full transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -139,23 +175,29 @@ const BookDetailsPage = () => {
   const isBookOwner = user && user._id === book.addedBy;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-orange-200 opacity-20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-red-200 opacity-20 rounded-full blur-3xl"></div>
-      </div>
+    <div className={`min-h-screen ${
+      isDark 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+        : 'bg-gradient-to-br from-amber-50 via-orange-50 to-red-50'
+    }`}>
+      {!isDark && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-64 h-64 bg-orange-200 opacity-20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-80 h-80 bg-red-200 opacity-20 rounded-full blur-3xl"></div>
+        </div>
+      )}
 
-      {/* Main Content */}
       <div className="relative max-w-6xl mx-auto px-6 py-8">
 
-        {/* Book Info Section */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-8 border border-orange-100 hover:shadow-2xl transition-shadow duration-300">
+        <div className={`rounded-3xl shadow-xl overflow-hidden mb-8 border hover:shadow-2xl transition-shadow duration-300 ${
+          isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-orange-100'
+        }`}>
           <BookInfo book={book} isOwner={isBookOwner} onDelete={handleBookDelete} />
         </div>
 
-        {/* Ratings Chart Section */}
-        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-orange-100 hover:shadow-2xl transition-shadow duration-300">
+        <div className={`rounded-3xl shadow-xl p-8 mb-8 border hover:shadow-2xl transition-shadow duration-300 ${
+          isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-orange-100'
+        }`}>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
               <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,16 +205,19 @@ const BookDetailsPage = () => {
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Rating Distribution</h2>
-              <p className="text-gray-600">See how readers rate this book</p>
+              <h2 className={`text-2xl font-bold ${
+                isDark ? 'text-gray-100' : 'text-gray-900'
+              }`}>Rating Distribution</h2>
+              <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>See how readers rate this book</p>
             </div>
           </div>
           <RatingChart reviews={reviews} />
         </div>
 
-        {/* Add Review Section */}
         {user ? (
-          <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-orange-100 hover:shadow-2xl transition-shadow duration-300">
+          <div className={`rounded-3xl shadow-xl p-8 mb-8 border hover:shadow-2xl transition-shadow duration-300 ${
+            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-orange-100'
+          }`}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,21 +225,31 @@ const BookDetailsPage = () => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Share Your Thoughts</h2>
-                <p className="text-gray-600">Help others discover great books</p>
+                <h2 className={`text-2xl font-bold ${
+                  isDark ? 'text-gray-100' : 'text-gray-900'
+                }`}>Share Your Thoughts</h2>
+                <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Help others discover great books</p>
               </div>
             </div>
             <AddReviewForm bookId={bookId} onReviewAdded={handleReviewAdded} />
           </div>
         ) : (
-          <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl shadow-lg p-8 mb-8 border-2 border-orange-200 text-center hover:shadow-xl transition-shadow duration-300">
+          <div className={`rounded-3xl shadow-lg p-8 mb-8 border-2 text-center hover:shadow-xl transition-shadow duration-300 ${
+            isDark
+              ? 'bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600'
+              : 'bg-gradient-to-br from-orange-50 to-red-50 border-orange-200'
+          }`}>
             <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
               <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Want to share your review?</h3>
-            <p className="text-gray-600 mb-6">Sign in to leave a review and help others discover great books</p>
+            <h3 className={`text-xl font-bold mb-2 ${
+              isDark ? 'text-gray-100' : 'text-gray-900'
+            }`}>Want to share your review?</h3>
+            <p className={`mb-6 ${
+              isDark ? 'text-gray-400' : 'text-gray-600'
+            }`}>Sign in to leave a review and help others discover great books</p>
             <Link 
               to="/login" 
               className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-full transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
@@ -207,8 +262,9 @@ const BookDetailsPage = () => {
           </div>
         )}
 
-        {/* Reviews List Section */}
-        <div className="bg-white rounded-3xl shadow-xl p-8 border border-orange-100 hover:shadow-2xl transition-shadow duration-300">
+        <div className={`rounded-3xl shadow-xl p-8 border hover:shadow-2xl transition-shadow duration-300 ${
+          isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-orange-100'
+        }`}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
@@ -217,26 +273,36 @@ const BookDetailsPage = () => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className={`text-2xl font-bold ${
+                  isDark ? 'text-gray-100' : 'text-gray-900'
+                }`}>
                   Reader Reviews
-                  <span className="text-gray-500 font-normal ml-2">
+                  <span className={`font-normal ml-2 ${
+                    isDark ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
                     ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
                   </span>
                 </h2>
-                <p className="text-gray-600">What readers are saying about this book</p>
+                <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>What readers are saying about this book</p>
               </div>
             </div>
           </div>
 
           {reviews.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-orange-100 to-red-100 rounded-full flex items-center justify-center">
+              <div className={`w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                isDark
+                  ? 'bg-gradient-to-br from-orange-900/50 to-red-900/50'
+                  : 'bg-gradient-to-br from-orange-100 to-red-100'
+              }`}>
                 <svg className="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No reviews yet</h3>
-              <p className="text-gray-600">Be the first to share your thoughts about this book!</p>
+              <h3 className={`text-xl font-bold mb-2 ${
+                isDark ? 'text-gray-100' : 'text-gray-900'
+              }`}>No reviews yet</h3>
+              <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Be the first to share your thoughts about this book!</p>
             </div>
           ) : (
             <ReviewsList

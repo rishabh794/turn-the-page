@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 
 const BookInfo = ({ book, isOwner, onDelete }) => {
+  const { isDark } = useTheme();
+  
   if (!book) return null;
 
   return (
     <div className="max-w-full overflow-hidden p-8">
-      <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2 break-words">{book.title}</h1>
-      <h2 className="text-lg md:text-xl text-gray-600 mb-8 break-words">by {book.author}</h2>
+      <h1 className={`text-4xl md:text-5xl font-bold mb-2 break-words ${
+        isDark ? 'text-gray-100' : 'text-gray-900'
+      }`}>{book.title}</h1>
+      <h2 className={`text-lg md:text-xl mb-8 break-words ${
+        isDark ? 'text-gray-400' : 'text-gray-600'
+      }`}>by {book.author}</h2>
 
       {isOwner && (
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -26,19 +33,27 @@ const BookInfo = ({ book, isOwner, onDelete }) => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 border-2 border-orange-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div className={`rounded-2xl p-6 border-2 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ${
+          isDark
+            ? 'bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600'
+            : 'bg-gradient-to-br from-orange-50 to-red-50 border-orange-200'
+        }`}>
           {book.reviewCount > 0 ? (
             <div>
-              <p className="text-sm text-gray-600 font-semibold mb-2 uppercase tracking-wide">Average Rating</p>
+              <p className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                isDark ? 'text-gray-400' : 'text-gray-600'
+              }`}>Average Rating</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">{book.averageRating}</span>
-                <span className="text-xl md:text-2xl text-gray-500">/ 5</span>
+                <span className={`text-xl md:text-2xl ${
+                  isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>/ 5</span>
               </div>
               <div className="flex items-center gap-1 mt-3">
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
-                    className={`w-6 h-6 ${i < Math.round(book.averageRating) ? 'text-orange-500' : 'text-gray-300'}`}
+                    className={`w-6 h-6 ${i < Math.round(book.averageRating) ? 'text-orange-500' : (isDark ? 'text-gray-600' : 'text-gray-300')}`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -46,49 +61,83 @@ const BookInfo = ({ book, isOwner, onDelete }) => {
                   </svg>
                 ))}
               </div>
-              <p className="text-sm text-gray-600 mt-3 break-words">Based on <span className="font-bold text-orange-600">{book.reviewCount}</span> reviews</p>
+              <p className={`text-sm mt-3 break-words ${
+                isDark ? 'text-gray-400' : 'text-gray-600'
+              }`}>Based on <span className="font-bold text-orange-600">{book.reviewCount}</span> reviews</p>
             </div>
           ) : (
             <div>
-              <p className="text-sm text-gray-600 font-semibold mb-2 uppercase tracking-wide">Rating</p>
-              <p className="text-gray-500 text-lg">No ratings yet</p>
-              <p className="text-sm text-gray-400 mt-2">Be the first to review!</p>
+              <p className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                isDark ? 'text-gray-400' : 'text-gray-600'
+              }`}>Rating</p>
+              <p className={`text-lg ${
+                isDark ? 'text-gray-400' : 'text-gray-500'
+              }`}>No ratings yet</p>
+              <p className={`text-sm mt-2 ${
+                isDark ? 'text-gray-500' : 'text-gray-400'
+              }`}>Be the first to review!</p>
             </div>
           )}
         </div>
 
         <div className="space-y-3 overflow-hidden">
-          <div className="flex items-center gap-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-orange-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className={`flex items-center gap-3 rounded-2xl p-4 border overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 ${
+            isDark
+              ? 'bg-gradient-to-r from-gray-800 to-gray-700 border-gray-600'
+              : 'bg-gradient-to-r from-amber-50 to-orange-50 border-orange-200'
+          }`}>
             <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
               <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
               </svg>
             </div>
             <div className="flex-1 overflow-hidden">
-              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide block">Genre</span>
-              <span className="text-gray-900 font-bold text-lg truncate block">{book.genre}</span>
+              <span className={`text-xs font-semibold uppercase tracking-wide block ${
+                isDark ? 'text-gray-400' : 'text-gray-600'
+              }`}>Genre</span>
+              <span className={`font-bold text-lg truncate block ${
+                isDark ? 'text-gray-100' : 'text-gray-900'
+              }`}>{book.genre}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-orange-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className={`flex items-center gap-3 rounded-2xl p-4 border overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 ${
+            isDark
+              ? 'bg-gradient-to-r from-gray-800 to-gray-700 border-gray-600'
+              : 'bg-gradient-to-r from-amber-50 to-orange-50 border-orange-200'
+          }`}>
             <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
               <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="flex-1 overflow-hidden">
-              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide block">Published</span>
-              <span className="text-gray-900 font-bold text-lg">{book.year}</span>
+              <span className={`text-xs font-semibold uppercase tracking-wide block ${
+                isDark ? 'text-gray-400' : 'text-gray-600'
+              }`}>Published</span>
+              <span className={`font-bold text-lg ${
+                isDark ? 'text-gray-100' : 'text-gray-900'
+              }`}>{book.year}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="border-t-2 border-orange-100 pt-6 mt-6 overflow-hidden">
+      <div className={`border-t-2 pt-6 mt-6 overflow-hidden ${
+        isDark ? 'border-gray-700' : 'border-orange-100'
+      }`}>
         <div className="flex items-center gap-3 mb-4">
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Description</h3>
+          <h3 className={`text-2xl md:text-3xl font-bold ${
+            isDark ? 'text-gray-100' : 'text-gray-900'
+          }`}>Description</h3>
         </div>
-        <div className="bg-gradient-to-br from-orange-50/50 to-amber-50/50 rounded-2xl p-6 border border-orange-100">
-          <p className="text-gray-700 leading-relaxed text-base md:text-lg break-words whitespace-pre-wrap">{book.description}</p>
+        <div className={`rounded-2xl p-6 border ${
+          isDark
+            ? 'bg-gradient-to-br from-gray-800/50 to-gray-700/50 border-gray-600'
+            : 'bg-gradient-to-br from-orange-50/50 to-amber-50/50 border-orange-100'
+        }`}>
+          <p className={`leading-relaxed text-base md:text-lg break-words whitespace-pre-wrap ${
+            isDark ? 'text-gray-300' : 'text-gray-700'
+          }`}>{book.description}</p>
         </div>
       </div>
     </div>

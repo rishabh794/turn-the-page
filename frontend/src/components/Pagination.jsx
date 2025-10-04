@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTheme } from '../hooks/useTheme';
 
 const Pagination = ({ page, totalPages, onPrev, onNext }) => {
+  const { isDark } = useTheme();
+  
   if (totalPages <= 1) return null;
 
   return (
@@ -12,7 +15,11 @@ const Pagination = ({ page, totalPages, onPrev, onNext }) => {
       >
         Previous
       </button>
-      <span className="text-gray-700 font-semibold text-lg px-4 py-2 bg-gray-100 rounded-lg min-w-fit">
+      <span className={`font-semibold text-lg px-4 py-2 rounded-lg min-w-fit ${
+        isDark
+          ? 'text-gray-300 bg-gray-700'
+          : 'text-gray-700 bg-gray-100'
+      }`}>
         Page {page} of {totalPages}
       </span>
       <button 

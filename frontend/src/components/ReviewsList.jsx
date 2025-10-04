@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
+import { useTheme } from '../hooks/useTheme';
 
 const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editRating, setEditRating] = useState(5);
   const [editText, setEditText] = useState('');
@@ -39,7 +41,7 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
     return [...Array(5)].map((_, i) => (
       <svg
         key={i}
-        className={`w-6 h-6 ${i < rating ? 'text-orange-500' : 'text-gray-300'}`}
+        className={`w-6 h-6 ${i < rating ? 'text-orange-500' : (isDark ? 'text-gray-600' : 'text-gray-300')}`}
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -49,9 +51,13 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
   };
 
   return (
-    <div className="mt-8 border-t-2 border-orange-100 pt-8">
+    <div className={`mt-8 border-t-2 pt-8 ${
+      isDark ? 'border-gray-700' : 'border-orange-100'
+    }`}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Reviews</h3>
+        <h3 className={`text-2xl md:text-3xl font-bold ${
+          isDark ? 'text-gray-100' : 'text-gray-900'
+        }`}>Reviews</h3>
       </div>
       
       {reviews.length > 0 ? (
@@ -60,12 +66,22 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
             const isReviewOwner = user && user._id === review.userId?._id;
             const isEditing = editingReviewId === review._id;
             return (
-              <div key={review._id} className="border-2 border-orange-200 rounded-2xl p-5 md:p-6 bg-gradient-to-br from-amber-50 to-orange-50 shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+              <div key={review._id} className={`border-2 rounded-2xl p-5 md:p-6 shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden ${
+                isDark
+                  ? 'bg-gradient-to-br from-gray-700 to-gray-600 border-gray-600'
+                  : 'bg-gradient-to-br from-amber-50 to-orange-50 border-orange-200'
+              }`}>
                 {isEditing ? (
                   <div className="space-y-5">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Rating</label>
-                      <div className="bg-white rounded-xl p-4 border-2 border-orange-200 shadow-sm mb-3">
+                      <label className={`block text-sm font-semibold mb-3 uppercase tracking-wide ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                      }`}>Rating</label>
+                      <div className={`rounded-xl p-4 border-2 shadow-sm mb-3 ${
+                        isDark
+                          ? 'bg-gray-800 border-gray-600'
+                          : 'bg-white border-orange-200'
+                      }`}>
                         <div className="flex items-center gap-2 mb-2">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <button
@@ -80,7 +96,7 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
                                 className={`w-8 h-8 ${
                                   star <= (hoveredStar || editRating)
                                     ? 'text-orange-500'
-                                    : 'text-gray-300'
+                                    : (isDark ? 'text-gray-600' : 'text-gray-300')
                                 }`}
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
@@ -97,7 +113,11 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
                       <select 
                         value={editRating} 
                         onChange={(e) => setEditRating(Number(e.target.value))}
-                        className="w-full px-4 py-3 border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 font-semibold transition duration-200"
+                        className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-semibold transition duration-200 ${
+                          isDark
+                            ? 'bg-gray-700 border-gray-600 text-gray-100'
+                            : 'bg-white border-orange-200 text-gray-900'
+                        }`}
                       >
                         <option value={5}>⭐⭐⭐⭐⭐ 5</option>
                         <option value={4}>⭐⭐⭐⭐ 4</option>
@@ -107,11 +127,17 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Review Text</label>
+                      <label className={`block text-sm font-semibold mb-3 uppercase tracking-wide ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                      }`}>Review Text</label>
                       <textarea 
                         value={editText} 
                         onChange={(e) => setEditText(e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-orange-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 resize-none shadow-sm"
+                        className={`w-full px-4 py-3 border-2 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none shadow-sm ${
+                          isDark
+                            ? 'bg-gray-700 border-gray-600 text-gray-100'
+                            : 'bg-white border-orange-200 text-gray-900'
+                        }`}
                         rows="4"
                       />
                     </div>
@@ -145,14 +171,24 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                           </svg>
                         </div>
-                        <span className="text-sm font-semibold text-gray-700">{review.userId?.name || 'Anonymous'}</span>
+                        <span className={`text-sm font-semibold ${
+                          isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>{review.userId?.name || 'Anonymous'}</span>
                       </div>
                     </div>
-                    <div className="bg-white rounded-xl p-4 border border-orange-200 shadow-sm mb-4">
-                      <p className="text-gray-700 leading-relaxed break-words whitespace-pre-wrap">{review.reviewText}</p>
+                    <div className={`rounded-xl p-4 border shadow-sm mb-4 ${
+                      isDark
+                        ? 'bg-gray-800 border-gray-600'
+                        : 'bg-white border-orange-200'
+                    }`}>
+                      <p className={`leading-relaxed break-words whitespace-pre-wrap ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                      }`}>{review.reviewText}</p>
                     </div>
                     {isReviewOwner && (
-                      <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t-2 border-orange-100">
+                      <div className={`flex flex-col sm:flex-row gap-2 pt-3 border-t-2 ${
+                        isDark ? 'border-gray-600' : 'border-orange-100'
+                      }`}>
                         <button 
                           onClick={() => handleEditClick(review)}
                           className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-full transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 text-sm"
@@ -174,14 +210,22 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
           })}
         </div>
       ) : (
-        <div className="text-center py-12 bg-gradient-to-br from-orange-50/50 to-amber-50/50 rounded-2xl border-2 border-orange-200 shadow-sm">
+        <div className={`text-center py-12 rounded-2xl border-2 shadow-sm ${
+          isDark
+            ? 'bg-gradient-to-br from-gray-700/50 to-gray-600/50 border-gray-600'
+            : 'bg-gradient-to-br from-orange-50/50 to-amber-50/50 border-orange-200'
+        }`}>
           <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clipRule="evenodd" />
             </svg>
           </div>
-          <p className="text-gray-600 text-lg font-semibold">No reviews yet</p>
-          <p className="text-gray-500 text-sm mt-2">Be the first to share your thoughts!</p>
+          <p className={`text-lg font-semibold ${
+            isDark ? 'text-gray-300' : 'text-gray-600'
+          }`}>No reviews yet</p>
+          <p className={`text-sm mt-2 ${
+            isDark ? 'text-gray-500' : 'text-gray-500'
+          }`}>Be the first to share your thoughts!</p>
         </div>
       )}
     </div>
