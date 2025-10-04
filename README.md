@@ -77,35 +77,22 @@ Example environment files (`.env.example`) are provided in both the `/backend` a
 ### 1. Clone the Repository
 
 git clone [https://github.com/YourUsername/turn-the-page.git](https://github.com/YourUsername/turn-the-page.git)
+
 cd turn-the-page
 
 ### 2. Backend Setup
-
-# Navigate to the backend directory
-
 cd backend
 
-# Install dependencies
-
 pnpm install
-
-# Start the server
 
 pnpm run start
 
 The backend server will be running on `http://localhost:8008`.
 
 ### 3. Frontend Setup
-
-# Navigate to the frontend directory from the root
-
 cd frontend
 
-# Install dependencies
-
 pnpm install
-
-# Start the development server
 
 pnpm run dev
 
