@@ -28,6 +28,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the Turn The Page API!",
+    status: "OK",
+    documentation:
+      "https://github.com/YourUsername/turn-the-page#api-endpoints", // Optional: Link to your README
+  });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/reviews", reviewRoutes);
