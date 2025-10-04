@@ -32,8 +32,7 @@ app.get("/", (req, res) => {
   res.status(200).json({
     message: "Welcome to the Turn The Page API!",
     status: "OK",
-    documentation:
-      "https://github.com/YourUsername/turn-the-page#api-endpoints", // Optional: Link to your README
+    documentation: "https://github.com/rishabh794/turn-the-page#api-endpoints",
   });
 });
 
