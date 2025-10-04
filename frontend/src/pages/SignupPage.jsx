@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../api/axios';
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -27,9 +27,7 @@ const SignupPage = () => {
     setIsLoading(true);
 
     try {
-      await axios.post('http://localhost:8008/api/auth/register', formData, {
-        withCredentials: true, 
-      });
+      await apiClient.post('api/auth/register', formData)
       await login(); 
       
       navigate('/');
@@ -42,14 +40,12 @@ const SignupPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Large Background Text */}
       <div className="absolute top-0 left-0 right-0 text-center pointer-events-none">
         <h1 className="text-[200px] font-bold text-gray-200 opacity-40 leading-none mt-[-20px]">
           SIGNUP
         </h1>
       </div>
 
-      {/* Left Book Image */}
       <div className="absolute left-8 top-1/2 transform -translate-y-1/2 hidden lg:block">
         <div className="w-64 h-64 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 shadow-2xl flex items-center justify-center">
           <svg className="w-32 h-32 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -65,7 +61,6 @@ const SignupPage = () => {
         </div>
       </div>
 
-      {/* Right Book Image */}
       <div className="absolute right-8 top-1/4 hidden lg:block">
         <div className="relative">
           <div className="w-48 h-48 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-2xl overflow-hidden">
@@ -85,7 +80,6 @@ const SignupPage = () => {
         </div>
       </div>
 
-      {/* Bottom Right Book Stack */}
       <div className="absolute bottom-8 right-8 hidden lg:block">
         <div className="w-56 h-56 rounded-full bg-gradient-to-br from-indigo-300 to-purple-400 shadow-2xl flex items-center justify-center">
           <svg className="w-28 h-28 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -94,20 +88,16 @@ const SignupPage = () => {
         </div>
       </div>
 
-      {/* Main Signup Card */}
       <div className="relative z-10 w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
         </div>
 
-        {/* Signup Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">Sign Up</h1>
           </div>
 
           <div className="space-y-6">
-            {/* Name Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,7 +114,6 @@ const SignupPage = () => {
               />
             </div>
 
-            {/* Email Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,7 +130,6 @@ const SignupPage = () => {
               />
             </div>
 
-            {/* Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,14 +162,12 @@ const SignupPage = () => {
               </button>
             </div>
 
-            {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
                 <p className="text-red-700 text-sm">{error}</p>
               </div>
             )}
 
-            {/* Signup Button */}
             <button
               type="button"
               onClick={handleSubmit}
@@ -212,7 +198,6 @@ const SignupPage = () => {
               </p>
             </div>
 
-            {/* Social Login */}
             <div className="text-center">
               <p className="text-gray-500 text-sm mb-4">Sign up with</p>
               <div className="flex justify-center gap-6">
@@ -245,7 +230,6 @@ const SignupPage = () => {
           </div>
         </div>
 
-        {/* Footer */}
           <div className="mt-4">
           <div className="flex justify-center gap-8 text-sm text-gray-600 mb-4">
             <Link 

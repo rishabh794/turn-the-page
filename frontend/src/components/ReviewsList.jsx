@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
+import apiClient from '../api/axios';
+
 
 const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
   const { user } = useAuth();
@@ -24,10 +25,9 @@ const ReviewsList = ({ reviews, onReviewDeleted, onReviewUpdated }) => {
 
   const handleUpdateReview = async (reviewId) => {
     try {
-      const res = await axios.put(
-        `http://localhost:8008/api/reviews/${reviewId}`,
-        { rating: editRating, reviewText: editText },
-        { withCredentials: true }
+      const res = await apiClient.put(
+        `api/reviews/${reviewId}`,
+        { rating: editRating, reviewText: editText }
       );
       onReviewUpdated(res.data);
       setEditingReviewId(null);

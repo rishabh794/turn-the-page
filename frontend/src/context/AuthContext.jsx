@@ -1,7 +1,7 @@
 import React, { useState, useEffect , useCallback } from 'react';
-import axios from 'axios';
 import { AuthContext } from './auth-context';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../api/axios';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -10,9 +10,7 @@ export const AuthProvider = ({ children }) => {
 
    const refetchUser = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:8008/api/auth/user-details', {
-        withCredentials: true,
-      });
+      const res = await apiClient.get('api/auth/user-details');
       setUser(res.data);
     } catch  {
       setUser(null);
@@ -31,9 +29,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.get('http://localhost:8008/api/auth/logout', {
-      withCredentials: true,
-    });
+    await apiClient.get('api/auth/logout');
     setUser(null);
     navigate('/login');
   };

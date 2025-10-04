@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "../api/axios";
 
 export const useBooks = () => {
   const [books, setBooks] = useState([]);
@@ -33,9 +33,7 @@ export const useBooks = () => {
           genre,
           sort,
         });
-        const res = await axios.get(
-          `http://localhost:8008/api/books?${params.toString()}`
-        );
+        const res = await apiClient.get(`api/books?${params.toString()}`);
         setBooks(res.data.books);
         setTotalPages(res.data.totalPages);
       } catch {
@@ -62,7 +60,6 @@ export const useBooks = () => {
     setPage(1);
   };
 
-  // Return everything the component will need
   return {
     books,
     loading,

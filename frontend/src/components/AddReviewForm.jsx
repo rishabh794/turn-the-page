@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useTheme } from '../hooks/useTheme';
+import apiClient from '../api/axios';
+
 
 const AddReviewForm = ({ bookId, onReviewAdded }) => {
   const [rating, setRating] = useState(5);
@@ -13,11 +14,8 @@ const AddReviewForm = ({ bookId, onReviewAdded }) => {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post(
-        `http://localhost:8008/api/books/${bookId}/reviews`,
-        { rating, reviewText },
-        { withCredentials: true }
-      );
+      const res = await apiClient.post(
+        `api/books/${bookId}/reviews`,{ rating, reviewText });
       onReviewAdded(res.data); 
       setReviewText(''); 
       setRating(5);

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../api/axios';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -28,9 +28,7 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      await axios.post('http://localhost:8008/api/auth/login', formData, {
-        withCredentials: true,
-      });
+      await apiClient.post('/api/auth/login', formData); 
       
       await login(); 
       
@@ -44,14 +42,12 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Large Background Text */}
       <div className="absolute top-0 left-0 right-0 text-center pointer-events-none mb-10">
         <h1 className="text-[200px] font-bold text-gray-200 opacity-40 leading-none mt-[-20px]">
           LOGIN
         </h1>
       </div>
 
-      {/* Left Book Image */}
       <div className="absolute left-8 top-1/2 transform -translate-y-1/2 hidden lg:block">
         <div className="w-64 h-64 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 shadow-2xl flex items-center justify-center">
           <svg className="w-32 h-32 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -67,7 +63,6 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Right Book Image */}
       <div className="absolute right-8 top-1/4 hidden lg:block">
         <div className="relative">
           <div className="w-48 h-48 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 shadow-2xl overflow-hidden">
@@ -87,7 +82,6 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Bottom Right Book Stack */}
       <div className="absolute bottom-8 right-8 hidden lg:block">
         <div className="w-56 h-56 rounded-full bg-gradient-to-br from-lime-300 to-green-400 shadow-2xl flex items-center justify-center">
           <svg className="w-28 h-28 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -96,20 +90,16 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Main Login Card */}
       <div className="relative z-10 w-full max-w-md mt-10">
-        {/* Logo */}
         <div className="text-center mb-8">
         </div>
 
-        {/* Login Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">Login</h1>
           </div>
 
           <div className="space-y-6">
-            {/* Email Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +116,6 @@ const LoginPage = () => {
               />
             </div>
 
-            {/* Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +148,6 @@ const LoginPage = () => {
               </button>
             </div>
 
-            {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center cursor-pointer">
                 <input
@@ -172,14 +160,12 @@ const LoginPage = () => {
               </label>
             </div>
 
-            {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
                 <p className="text-red-700 text-sm">{error}</p>
               </div>
             )}
 
-            {/* Login Button */}
             <button
               type="button"
               onClick={handleSubmit}
@@ -199,7 +185,6 @@ const LoginPage = () => {
               )}
             </button>
 
-            {/* Social Login */}
             <div className="text-center">
               <p className="text-gray-500 text-sm mb-4">Login with</p>
               <div className="flex justify-center gap-6">
@@ -232,7 +217,6 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="mt-4">
           <div className="flex justify-center gap-8 text-sm text-gray-600 mb-4">
             <Link 

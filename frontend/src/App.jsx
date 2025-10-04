@@ -52,17 +52,17 @@ function App() {
                 </div>
               </Link>
 
-              <div className="flex items-center gap-8">
-                <Link 
-                  to="/" 
-                  className={`font-bold transition-all duration-200 hover:scale-105 text-sm uppercase tracking-wide ${
-                    isDark
-                      ? 'text-orange-400 hover:text-red-400'
-                      : 'text-orange-800 hover:text-red-600'
-                  }`}
-                >
-                  Home
-                </Link>
+                <div className="flex items-center gap-8">
+                  <Link 
+                    to="/" 
+                    className={`font-bold transition-all duration-200 hover:scale-105 text-sm uppercase tracking-wide ${
+                      isDark
+                        ? 'text-orange-400 hover:text-red-400'
+                        : 'text-orange-800 hover:text-red-600'
+                    }`}
+                  >
+                    Home
+                  </Link>
                 {user && (
                   <>
                     <Link 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { Link } from 'react-router-dom';
+import apiClient from '../api/axios';
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -18,8 +18,8 @@ const ProfilePage = () => {
     const fetchProfileData = async () => {
       try {
         const [booksRes, reviewsRes] = await Promise.all([
-          axios.get('http://localhost:8008/api/users/my-books', { withCredentials: true }),
-          axios.get('http://localhost:8008/api/users/my-reviews', { withCredentials: true }),
+          apiClient.get('api/users/my-books', { withCredentials: true }),
+          apiClient.get('api/users/my-reviews', { withCredentials: true }),
         ]);
         setMyBooks(booksRes.data);
         setMyReviews(reviewsRes.data);

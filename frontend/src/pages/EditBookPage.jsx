@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import { genreOptions } from '../constants/genres';
+import apiClient from '../api/axios';
 
 const EditBookPage = () => {
   const [formData, setFormData]  = useState({
@@ -21,7 +21,7 @@ const EditBookPage = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const res = await axios.get(`http://localhost:8008/api/books/${bookId}`);
+        const res = await apiClient.get(`api/books/${bookId}`);
         setFormData({
             title: res.data.title,
             author: res.data.author,
@@ -48,9 +48,7 @@ const EditBookPage = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.put(`http://localhost:8008/api/books/${bookId}`, formData, {
-        withCredentials: true,
-      });
+      await apiClient.put(`api/books/${bookId}`, formData);
       navigate(`/books/${bookId}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update book.');

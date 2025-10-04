@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import { genreOptions } from '../constants/genres';
+import apiClient from '../api/axios';
 
 const AddBookPage = () => {
   const [formData, setFormData] = useState({
@@ -25,9 +25,7 @@ const AddBookPage = () => {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post('http://localhost:8008/api/books', formData, {
-        withCredentials: true,
-      });
+      const res = await apiClient.post('api/books', formData);
       navigate(`/books/${res.data._id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add book.');

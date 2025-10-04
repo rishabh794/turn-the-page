@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
 import { useTheme } from '../hooks/useTheme';
 import AddReviewForm from '../components/AddReviewForm';
 import { useAuth } from '../hooks/useAuth';
 import BookInfo from '../components/BookInfo';
 import RatingChart from '../components/RatingChart';
 import ReviewsList from '../components/ReviewsList';
+import apiClient from '../api/axios';
 
 const BookDetailsPage = () => {
   const [book, setBook] = useState(null);
@@ -22,8 +22,8 @@ const BookDetailsPage = () => {
     const fetchBook = async () => {
       try {
         const [bookRes, reviewsRes] = await Promise.all([
-          axios.get(`http://localhost:8008/api/books/${bookId}`),
-          axios.get(`http://localhost:8008/api/books/${bookId}/reviews`),
+          apiClient.get(`api/books/${bookId}`),
+          apiClient.get(`api/books/${bookId}/reviews`),
         ]);
         setBook(bookRes.data);
         setReviews(reviewsRes.data);
@@ -45,9 +45,7 @@ const BookDetailsPage = () => {
   const handleBookDelete = async () => {
     if (window.confirm('Are you sure you want to delete this book?')) {
       try {
-        await axios.delete(`http://localhost:8008/api/books/${bookId}`, {
-          withCredentials: true,
-        });
+        await apiClient.delete(`api/books/${bookId}`);
         navigate('/'); 
       } catch (err) {
         setError('Failed to delete the book.');
@@ -59,7 +57,7 @@ const BookDetailsPage = () => {
   const handleReviewDelete = async (reviewId) => {
     if (window.confirm('Are you sure you want to delete this review?')) {
       try {
-        await axios.delete(`http://localhost:8008/api/reviews/${reviewId}`, { withCredentials: true });
+        await apiClient.delete(`api/reviews/${reviewId}`);
         setReviews(reviews.filter((review) => review._id !== reviewId));
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to delete the review.');
