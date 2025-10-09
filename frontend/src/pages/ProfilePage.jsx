@@ -210,12 +210,18 @@ const ProfilePage = () => {
                       <span className={`font-medium ${
                         isDark ? 'text-gray-400' : 'text-gray-600'
                       }`}>for</span>
+                      {review.bookId ? (
                       <Link 
                         to={`/books/${review.bookId._id}`} 
                         className="text-orange-600 hover:text-red-600 font-bold hover:underline transition-colors"
                       >
                         {review.bookId.title}
                       </Link>
+                    ) : (
+                      <span className={`font-bold italic ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                        [Deleted Book]
+                      </span>
+                    )}
                     </div>
                   </div>
                   <div className={`rounded-xl p-4 border shadow-sm ${
